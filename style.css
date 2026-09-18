@@ -1,0 +1,548 @@
+/* ==========================================================================
+   1. CSS Custom Properties / Design Tokens
+   ========================================================================== */
+:root {
+  /* Colors */
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-switch: #f1f5f9;
+  --bg-gauge-track: #e2e8f0;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --color-accent: #0284c7;
+  --color-accent-hover: #0369a1;
+  --color-accent-subtle: #e0f2fe;
+
+  --border-subtle: #e2e8f0;
+  --border-focus: #0284c7;
+  --border-error: #ef4444;
+
+  /* BMI Category Indicator Colors */
+  --color-underweight: #38bdf8;
+  --color-normal: #10b981;
+  --color-overweight: #f59e0b;
+  --color-obesity: #ef4444;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --shadow-button: 0 4px 6px -1px rgba(2, 132, 199, 0.2), 0 2px 4px -2px rgba(2, 132, 199, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(2, 132, 199, 0.2);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-medium: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   2. Reset & Baseline Styles
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-md);
+  -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   3. Layout & Container
+   ========================================================================== */
+.app-container {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.app-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.badge {
+  display: inline-block;
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-xs);
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  max-width: 440px;
+  line-height: 1.4;
+}
+
+.calculator-card {
+  background-color: var(--bg-card);
+  width: 100%;
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   4. Unit Switcher (Segmented Control)
+   ========================================================================== */
+.unit-switcher {
+  border: none;
+  background-color: var(--bg-switch);
+  padding: 0.3125rem;
+  border-radius: var(--radius-md);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.switch-option {
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+}
+
+.switch-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-pill {
+  display: block;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.switch-option input[type="radio"]:checked + .switch-pill {
+  background-color: var(--bg-card);
+  color: var(--color-accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.switch-option input[type="radio"]:focus-visible + .switch-pill {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   5. Form Inputs & Validation States
+   ========================================================================== */
+.input-group-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.input-group-wrapper[hidden] {
+  display: none;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.unit-tag {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 0.6875rem 0.875rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  appearance: textfield;
+}
+
+.input-container input::-webkit-outer-spin-button,
+.input-container input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-container input:hover {
+  border-color: #cbd5e1;
+}
+
+.input-container input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.input-container.has-error input {
+  border-color: var(--border-error);
+}
+
+.input-container.has-error input:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: var(--border-error);
+  min-height: 1.125rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   6. Action Buttons
+   ========================================================================== */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-switch);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   7. Result Presentation & Visual Gauge
+   ========================================================================== */
+.result-section {
+  margin-top: var(--space-lg);
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.result-section[hidden] {
+  display: none;
+}
+
+.result-divider {
+  height: 1px;
+  background-color: var(--border-subtle);
+  margin-bottom: var(--space-lg);
+}
+
+.result-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  text-align: center;
+}
+
+.result-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bmi-number {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.bmi-category-badge {
+  display: inline-block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.875rem;
+  border-radius: var(--radius-full);
+  margin-top: var(--space-xs);
+}
+
+/* Badge Contextual Colors */
+.badge-underweight {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #0369a1;
+}
+
+.badge-normal {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #065f46;
+}
+
+.badge-overweight {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #92400e;
+}
+
+.badge-obesity {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #991b1b;
+}
+
+/* Visual Gauge */
+.gauge-wrapper {
+  margin-top: var(--space-lg);
+  padding: 0 var(--space-xs);
+}
+
+.gauge-bar {
+  position: relative;
+  height: 12px;
+  border-radius: var(--radius-full);
+  display: flex;
+  overflow: visible;
+  background-color: var(--bg-gauge-track);
+}
+
+.gauge-segment {
+  flex: 1;
+}
+
+.gauge-segment:first-child {
+  border-top-left-radius: var(--radius-full);
+  border-bottom-left-radius: var(--radius-full);
+}
+
+.gauge-segment:last-of-type {
+  border-top-right-radius: var(--radius-full);
+  border-bottom-right-radius: var(--radius-full);
+}
+
+.segment-underweight { background-color: var(--color-underweight); }
+.segment-normal      { background-color: var(--color-normal); }
+.segment-overweight  { background-color: var(--color-overweight); }
+.segment-obesity     { background-color: var(--color-obesity); }
+
+.gauge-pointer {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  background-color: var(--text-primary);
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left var(--transition-medium);
+}
+
+.gauge-labels,
+.gauge-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+}
+
+.gauge-legend {
+  margin-top: 0.125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.gauge-legend span,
+.gauge-labels span {
+  flex: 1;
+  text-align: center;
+}
+
+/* Feedback & Medical Text */
+.result-feedback {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--bg-page);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.feedback-highlight {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.feedback-text {
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.medical-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-top: var(--space-xs);
+  padding-top: var(--space-xs);
+  border-top: 1px dashed var(--border-subtle);
+}
+
+/* ==========================================================================
+   8. Keyframes & Animation
+   ========================================================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   9. Responsive Design
+   ========================================================================== */
+@media (max-width: 480px) {
+  .calculator-card {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
+  .gauge-labels {
+    font-size: 0.625rem;
+  }
+
+  .gauge-legend {
+    font-size: 0.625rem;
+  }
+
+  .bmi-number {
+    font-size: 2.5rem;
+  }
+}

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Calculate your Body Mass Index (BMI) accurately with metric or imperial units. Includes health range categories and visual chart.">
+  <title>BMI Calculator | Free BMI Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="app-container">
+    <!-- Header Section -->
+    <header class="app-header">
+      <span class="badge">HEALTH TOOL</span>
+      <h1 class="title">BMI Calculator</h1>
+      <p class="subtitle">Calculate your Body Mass Index (BMI) to understand your general weight category based on your height and weight.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      
+      <!-- Unit Switcher -->
+      <fieldset class="unit-switcher" role="radiogroup" aria-label="Measurement Units">
+        <legend class="sr-only">Choose measurement system</legend>
+        
+        <label class="switch-option" for="unit-metric">
+          <input type="radio" id="unit-metric" name="unit" value="metric" checked>
+          <span class="switch-pill">Metric (kg / cm)</span>
+        </label>
+        
+        <label class="switch-option" for="unit-imperial">
+          <input type="radio" id="unit-imperial" name="unit" value="imperial">
+          <span class="switch-pill">Imperial (lb / ft / in)</span>
+        </label>
+      </fieldset>
+
+      <!-- Calculator Form -->
+      <form id="bmi-form" novalidate>
+
+        <!-- Metric Inputs -->
+        <div id="metric-fields" class="input-group-wrapper active">
+          
+          <div class="form-field">
+            <label for="metric-weight">Weight <span class="unit-tag">(kg)</span></label>
+            <div class="input-container">
+              <input 
+                type="number" 
+                id="metric-weight" 
+                name="metric-weight" 
+                placeholder="e.g., 70" 
+                min="10" 
+                max="350" 
+                step="0.1" 
+                aria-describedby="metric-weight-error"
+              >
+            </div>
+            <span id="metric-weight-error" class="field-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="metric-height">Height <span class="unit-tag">(cm)</span></label>
+            <div class="input-container">
+              <input 
+                type="number" 
+                id="metric-height" 
+                name="metric-height" 
+                placeholder="e.g., 175" 
+                min="50" 
+                max="260" 
+                step="0.1" 
+                aria-describedby="metric-height-error"
+              >
+            </div>
+            <span id="metric-height-error" class="field-error" aria-live="polite"></span>
+          </div>
+
+        </div>
+
+        <!-- Imperial Inputs -->
+        <div id="imperial-fields" class="input-group-wrapper" hidden>
+
+          <div class="form-field">
+            <label for="imperial-weight">Weight <span class="unit-tag">(lb)</span></label>
+            <div class="input-container">
+              <input 
+                type="number" 
+                id="imperial-weight" 
+                name="imperial-weight" 
+                placeholder="e.g., 154" 
+                min="20" 
+                max="800" 
+                step="0.1" 
+                aria-describedby="imperial-weight-error"
+              >
+            </div>
+            <span id="imperial-weight-error" class="field-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="imperial-height-ft">Height <span class="unit-tag">(feet)</span></label>
+              <div class="input-container">
+                <input 
+                  type="number" 
+                  id="imperial-height-ft" 
+                  name="imperial-height-ft" 
+                  placeholder="e.g., 5" 
+                  min="1" 
+                  max="8" 
+                  step="1" 
+                  aria-describedby="imperial-height-ft-error"
+                >
+              </div>
+              <span id="imperial-height-ft-error" class="field-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="imperial-height-in">Height <span class="unit-tag">(inches)</span></label>
+              <div class="input-container">
+                <input 
+                  type="number" 
+                  id="imperial-height-in" 
+                  name="imperial-height-in" 
+                  placeholder="e.g., 9" 
+                  min="0" 
+                  max="11.9" 
+                  step="0.1" 
+                  aria-describedby="imperial-height-in-error"
+                >
+              </div>
+              <span id="imperial-height-in-error" class="field-error" aria-live="polite"></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Form Actions -->
+        <div class="action-buttons">
+          <button type="submit" id="calculate-btn" class="btn btn-primary">Calculate BMI</button>
+          <button type="button" id="reset-btn" class="btn btn-secondary">Reset</button>
+        </div>
+
+      </form>
+
+      <!-- Result Section -->
+      <section id="result-section" class="result-section" aria-live="polite" aria-atomic="true" hidden>
+        <div class="result-divider"></div>
+        
+        <div class="result-header">
+          <span class="result-label">Your BMI</span>
+          <div class="bmi-score-container">
+            <span id="bmi-value" class="bmi-number">--</span>
+          </div>
+          <span id="bmi-category" class="bmi-category-badge">Normal weight</span>
+        </div>
+
+        <!-- Visual BMI Gauge -->
+        <div class="gauge-wrapper" aria-hidden="true">
+          <div class="gauge-bar">
+            <div class="gauge-segment segment-underweight"></div>
+            <div class="gauge-segment segment-normal"></div>
+            <div class="gauge-segment segment-overweight"></div>
+            <div class="gauge-segment segment-obesity"></div>
+            <div id="gauge-pointer" class="gauge-pointer" style="left: 0%;"></div>
+          </div>
+          <div class="gauge-labels">
+            <span>&lt; 18.5</span>
+            <span>18.5 - 24.9</span>
+            <span>25.0 - 29.9</span>
+            <span>30.0+</span>
+          </div>
+          <div class="gauge-legend">
+            <span>Underweight</span>
+            <span>Normal</span>
+            <span>Overweight</span>
+            <span>Obese</span>
+          </div>
+        </div>
+
+        <!-- Informational Feedback -->
+        <div class="result-feedback">
+          <p id="healthy-range-text" class="feedback-highlight">Healthy BMI range: <strong>18.5 – 24.9</strong></p>
+          <p id="category-explanation" class="feedback-text"></p>
+          <p class="medical-disclaimer">Disclaimer: BMI is a screening measure and does not directly measure body fat, muscle mass, or overall health.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
