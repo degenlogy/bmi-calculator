@@ -8,4 +8,4 @@ A simple and responsive tool that calculates BMI instantly based on height and w
 * CSS3
 * JavaScript
 
-### Live - 
+### Live - https://bmi-calculator-tau-wine.vercel.app/
